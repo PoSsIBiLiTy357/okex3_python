@@ -1,67 +1,87 @@
-# Makefile six
+.PHONY: clean clean-test clean-pyc clean-build docs help
+.DEFAULT_GOAL := help
+define BROWSER_PYSCRIPT
+import os, webbrowser, sys
+try:
+	from urllib import pathname2url
+except:
+	from urllib.request import pathname2url
 
-PIP=$(VIRTUAL_ENV)/bin/pip 
-PY=$(VIRTUAL_ENV)/bin/python
+webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
+endef
+export BROWSER_PYSCRIPT
 
-.PHONY: clean-pyc clean-build clean clean-others pep8 start shell
+define PRINT_HELP_PYSCRIPT
+import re, sys
+
+for line in sys.stdin:
+	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
+	if match:
+		target, help = match.groups()
+		print("%-20s %s" % (target, help))
+endef
+export PRINT_HELP_PYSCRIPT
+BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 help:
-	@echo "start - start a django runserver"
-	@echo "shell - execute a django shell_plus"
-	@echo "clean - remove all build, test, coverage and Python artifacts"
-	@echo "clean-build - remove build artifacts"
-	@echo "clean-pyc - remove Python file artifacts"
-	@echo "clean-others - remove Thumbs.db, etc file artifacts"
-	@echo "clean-test - remove test and coverage artifacts"
-	@echo "lint - check style with pycodestyle"
-	@echo "test - run tests quickly with the default Python"
+	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+
+clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
 
-clean: clean-build clean-others clean-test clean-pyc
-
-clean-build:
+clean-build: ## remove build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
-	rm -rf '*.tgz'
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
-	find . -name '*.log' -exec rm -f {} +
-	find . -name '*.sql' -exec rm -f {} +
 
-clean-others:
-	rm -fr runtime/**/**
-	rm -rf celerybeat-schedule
-	rm -rf dump.rdb
-	find . -name 'Thumbs.db' -exec rm -f {} +
-	find . -name '*.tgz' -exec rm -f {} +
-	find . -name 'dump.rdb' -exec rm -f {} +
-	find . -name 'celery*.db' -exec rm -f {} +
-
-clean-pyc:
+clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-clean-test:
-	rm -rf nosetests.html
-	rm -rf .coverage
-	rm -rf htmlcov/
-	rm -rf reports/
-	rm -rf .tox/
+clean-test: ## remove test and coverage artifacts
+	rm -fr .tox/
+	rm -f .coverage
+	rm -fr htmlcov/
+
+lint: ## check style with flake8
+	flake8 mootdx tests
+
+test: ## run tests quickly with the default Python
+	py.test
 	
-lint:
-	@pycodestyle --ignore=E501,F403,E122 **/*.py
 
-test:
-	DJANGO_SETTINGS_MODULE=config.settings.test $(PY) manage.py test --traceback -v2
+test-all: ## run tests on every Python version with tox
+	tox
 
-start:
-	@$(PY) manage.py runserver
+coverage: ## check code coverage quickly with the default Python
+	coverage run --source mootdx -m pytest
+	coverage report -m
+	coverage html
+	$(BROWSER) htmlcov/index.html
 
-shell:
-	@$(PY) manage.py shell_plus
+docs: ## generate Sphinx HTML documentation, including API docs
+	rm -f docs/mootdx.rst
+	rm -f docs/modules.rst
+	sphinx-apidoc -o docs/ mootdx
+	$(MAKE) -C docs clean
+	$(MAKE) -C docs html
+	$(BROWSER) docs/_build/html/index.html
 
+servedocs: docs ## compile the docs watching for changes
+	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
-# DO NOT DELETE
+release: clean ## package and upload a release
+	python setup.py sdist upload
+	python setup.py bdist_wheel upload
+
+dist: clean ## builds source and wheel package
+	python setup.py sdist
+	python setup.py bdist_wheel
+	ls -l dist
+
+install: clean ## install the package to the active Python's site-packages
+	python setup.py install

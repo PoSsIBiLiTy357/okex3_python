@@ -1,6 +1,6 @@
-from .api import *
-
 import importlib
+
+__version__ = '0.1.0'
 
 def dynamic_import(module):
     return importlib.import_module(module)
