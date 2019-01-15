@@ -108,7 +108,3 @@ class SpotAPI(Client):
     def get_kline(self, instrument_id, start, end, granularity):
         params = {'start': start, 'end': end, 'granularity': granularity}
         return self._request_with_params(GET, SPOT_KLINE + str(instrument_id) + '/candles', params)
-
-
-
-

@@ -1,6 +1,7 @@
+from exceptions import OkexParamsException
+
 from client import Client
 from consts import *
-from exceptions import OkexParamsException
 
 
 class AccountAPI(Client):
@@ -78,4 +79,3 @@ class AccountAPI(Client):
         print(sub_account,instrument_id)
         params = {'currency': currency, 'amount': amount, 'from': account_from, 'to': account_to, 'sub_account': sub_account, 'instrument_id': instrument_id}
         return self._request_with_params('POST', COIN_TRANSFER, params)
-

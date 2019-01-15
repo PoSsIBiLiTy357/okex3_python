@@ -151,8 +151,3 @@ class FutureAPI(Client):
     # query mark price
     def get_mark_price(self, instrument_id):
         return self._request_without_params(GET, FUTURE_MARK + str(instrument_id) + '/mark_price')
-
-
-
-
-

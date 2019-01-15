@@ -4,19 +4,17 @@ import futures_api as future
 import lever_api as lever
 import spot_api as spot
 
-
 if __name__ == '__main__':
-
-    api_key = ''
-    seceret_key = ''
-    passphrase = ''
+    api_key = "8ddafe06-9030-43d9-aea3-c53e2f0ac4c5"
+    seceret_key = "1502A0A2912BA8C307593803DDE54D8E"
+    passphrase = '781b6226969b20d353a5c5b5257b759d'
 
     # account api test
     # param use_server_time's value is False if is True will use server timestamp
     accountAPI = account.AccountAPI(api_key, seceret_key, passphrase, True)
-    result = accountAPI.get_currencies()
-    #result = accountAPI.get_wallet()
-    #result = accountAPI.get_currency('btc')
+    # result = accountAPI.get_currencies()
+    result = accountAPI.get_wallet()
+    # result = accountAPI.get_currency('btc')
     #result = accountAPI.get_currency('btc')
     #result = accountAPI.get_coin_fee('btc')
     # system error...
@@ -81,12 +79,3 @@ if __name__ == '__main__':
     #result = ettAPI.get_define_price('ok06ett')
 
     print(result)
-
-
-
-
-
-
-
-
-

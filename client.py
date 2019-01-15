@@ -1,6 +1,10 @@
-import requests
+import exceptions
 import json
-import consts as c, utils, exceptions
+
+import requests
+
+import consts as c
+import utils
 
 
 class Client(object):
@@ -18,18 +22,20 @@ class Client(object):
         request_path = request_path + utils.parse_params_to_str(params)
         # url
         url = c.API_URL + request_path
+        print(url)
 
         timestamp = utils.get_timestamp()
         # sign & header
         if self.use_server_time:
             timestamp = self._get_timestamp()
-        body = json.dumps(params) if method == c.POST else ""
 
+        body = json.dumps(params) if method == c.POST else ""
         sign = utils.sign(utils.pre_hash(timestamp, method, request_path, str(body)), self.API_SECRET_KEY)
         header = utils.get_header(self.API_KEY, sign, timestamp, self.PASSPHRASE)
 
         # send request
         response = None
+
         if method == c.GET:
             response = requests.get(url, headers=header)
         elif method == c.POST:
@@ -40,8 +46,10 @@ class Client(object):
         # exception handle
         if not str(response.status_code).startswith('2'):
             raise exceptions.OkexAPIException(response)
+
         try:
             res_header = response.headers
+            
             if cursor:
                 r = dict()
                 try:
@@ -64,11 +72,10 @@ class Client(object):
     def _get_timestamp(self):
         url = c.API_URL + c.SERVER_TIMESTAMP_URL
         response = requests.get(url)
+
+        print(response.json())
+
         if response.status_code == 200:
             return response.json()['iso']
         else:
             return ""
-
-
-
-

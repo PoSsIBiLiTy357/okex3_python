@@ -1,7 +1,5 @@
-
-
 # http header
-API_URL = 'https://www.okex.com'
+API_URL = 'https://www.okex.me'
 CONTENT_TYPE = 'Content-Type'
 OK_ACCESS_KEY = 'OK-ACCESS-KEY'
 OK_ACCESS_SIGN = 'OK-ACCESS-SIGN'
@@ -19,7 +17,7 @@ GET = "GET"
 POST = "POST"
 DELETE = "DELETE"
 
-SERVER_TIMESTAMP_URL = '/api/futures/v3/time'
+SERVER_TIMESTAMP_URL = '/api/general/v3/time'
 
 # account
 
@@ -114,4 +112,3 @@ ETT_ORDER_LIST = '/api/ett/v3/orders'
 ETT_SPECIFIC_ORDER = '/api/ett/v3/orders/'
 ETT_CONSTITUENTS = '/api/ett/v3/constituents/'
 ETT_DEFINE = '/api/ett/v3/define-price/'
-

@@ -40,7 +40,3 @@ class OkexParamsException(Exception):
 
     def __str__(self):
         return 'OkexParamsException: %s' % self.message
-
-
-
-
