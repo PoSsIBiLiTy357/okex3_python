@@ -9,6 +9,10 @@ if __name__ == '__main__':
     seceret_key = ""
     passphrase = ''
 
+    client = OKEx3(api_key=api_key, api_seceret_key=seceret_key, passphrase=passphrase, use_server_time=True)
+    account = client.create('account')
+    spot = client.create('spot')
+    
     # account api test
     # param use_server_time's value is False if is True will use server timestamp
     accountAPI = account.AccountAPI(api_key, seceret_key, passphrase, True)
