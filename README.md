@@ -1,3 +1,3 @@
-# okexv3api_python
+# OKEX V3 for Python 版本
 
-# please run the example
+查看`API`说明
