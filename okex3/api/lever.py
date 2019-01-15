@@ -1,5 +1,5 @@
-from client import Client
-from consts import *
+from ..client import Client
+from ..consts import *
 
 #params = {'before': before, 'after': after, 'limit': limit, 'recordType': recordType}
 

@@ -1,7 +1,7 @@
-from exceptions import OkexParamsException
+from ..exceptions import OkexParamsException
 
-from client import Client
-from consts import *
+from ..client import Client
+from ..consts import *
 
 
 class AccountAPI(Client):
